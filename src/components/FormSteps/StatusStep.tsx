@@ -4,7 +4,7 @@ import { submitFormData } from '../../api/xanoClient';
 interface FormData {
   name: string;
   email: string;
-  // ...other fields
+  address: string;
   file: File | null;
   multipleFiles: File[];
   location: { lat: number; lng: number } | null;
@@ -19,6 +19,7 @@ interface Props {
 const StatusStep: React.FC<Props> = ({ formData, prevStep, resetForm }) => {
   const [submitStatus, setSubmitStatus] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false); // ← NEW: loading state
+  console.log(formData)
 
   const handleSubmit = async () => {
     try {
@@ -46,7 +47,36 @@ const StatusStep: React.FC<Props> = ({ formData, prevStep, resetForm }) => {
       <h2 className="text-xl font-bold mb-4">Status</h2>
 
       {!submitStatus && !loading && (
-        <p className="mb-4 text-gray-600">Review your data and click Submit.</p>
+        <>
+          <p className="mb-4 text-gray-600">Review your data and click Submit.</p>
+          
+          <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+            <h3 className="font-semibold mb-3">Form Data Review:</h3>
+            <div className="space-y-2">
+              <p><span className="font-medium">Name:</span> {formData.name}</p>
+              <p><span className="font-medium">Email:</span> {formData.email}</p>
+              
+              {/* Address Fields */}
+              <p><span className="font-medium">Address Line 1:</span> {formData.address1}</p>
+              {formData.address2 && (
+                <p><span className="font-medium">Address Line 2:</span> {formData.address2}</p>
+              )}
+              <p><span className="font-medium">City:</span> {formData.city}</p>
+              <p><span className="font-medium">Country:</span> {formData.country}</p>
+              <p><span className="font-medium">Pincode:</span> {formData.pincode}</p>
+              
+              {formData.file && (
+                <p><span className="font-medium">File:</span> {formData.file.name}</p>
+              )}
+              {formData.multipleFiles.length > 0 && (
+                <p><span className="font-medium">Additional Files:</span> {formData.multipleFiles.length} files selected</p>
+              )}
+              {formData.location && (
+                <p><span className="font-medium">Location:</span> {`${formData.location.lat}, ${formData.location.lng}`}</p>
+              )}
+            </div>
+          </div>
+        </>
       )}
 
       {submitStatus && (
